@@ -2,3 +2,8 @@
   font-size: calc(10px + 2vmin);
   margin: 5px;
 }
+
+.MsgParagraf {
+  margin-top: 1px;
+  margin-bottom: 2px;
+}
