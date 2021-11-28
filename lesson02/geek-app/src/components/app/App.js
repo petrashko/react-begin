@@ -1,6 +1,6 @@
 // /* eslint-disable */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 import Message from '../message/Message';
 //
@@ -24,7 +24,7 @@ const App = () => {
     const [messageList, setMessageList] = useState(initialState);
     const [inputText, setInputText] = useState('');
 
-    const getMessages = useCallback(
+    const messages = useMemo(
         () => {
             return messageList.map((msg, index) => {
                 return (
@@ -36,14 +36,6 @@ const App = () => {
                     </p>
                 );
             });
-        },
-        // eslint-disable-next-line
-        [messageList]
-    );
-
-    const messages = useMemo(
-        () => {
-            return getMessages();
         },
         // eslint-disable-next-line
         [messageList]
