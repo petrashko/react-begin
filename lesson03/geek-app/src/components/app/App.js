@@ -1,28 +1,30 @@
 // /* eslint-disable */
 
-import { useState, useEffect, useMemo } from 'react';
-
+import { useState, useEffect, useMemo, useRef } from 'react';
+//
+import { Container, Row, Col, ListGroup, Form, Button } from 'react-bootstrap';
+//
+import {v4 as uuidv4} from 'uuid';
+//
 import Message from '../message/Message';
 //
 import styles from './App.module.css';
 
-const initialState = [
-    /*
-    {
-        text: 'Text 1',
-        author: 'user'
-    },
-    {
-        text: 'Hello User! I am bot',
-        author: 'bot'
-    }
-    */
+const initialMessages = [];
+const initialChats = [
+    {id: uuidv4(), name: 'Chat 1'},
+    {id: uuidv4(), name: 'Chat 2'},
+    {id: uuidv4(), name: 'Chat 3'},
+    {id: uuidv4(), name: 'Chat 4'}
 ];
 
 const App = () => {
     //
-    const [messageList, setMessageList] = useState(initialState);
+    const [messageList, setMessageList] = useState(initialMessages);
+    // eslint-disable-next-line
+    const [chatList, setChatList] = useState(initialChats);
     const [inputText, setInputText] = useState('');
+    const inputRef = useRef();
 
     const messages = useMemo(
         () => {
@@ -43,6 +45,7 @@ const App = () => {
 
     useEffect(
         () => {
+            inputRef.current?.focus();
             if (messageList.length === 0) {
                 return;
             }
@@ -98,24 +101,42 @@ const App = () => {
             <Message
                 msg="Learning React"
             />
-            <div>
-                <form onSubmit={(ev) => addMessage(ev)}>
-                    <input
-                        type="text"
-                        value={inputText}
-                        onChange={(ev) => setInputText(ev.target.value)}
-                    />
-                    <button
-                        type="submit"
-                        style={{marginLeft: '5px'}}
-                    >
-                        Отправить
-                    </button>
-                </form>
-            </div>
-            <div>
-                {messages}
-            </div>
+            <Container className="mt-5 mb-5">
+                <Row>
+                    <Col className="pe-5" xs={12} sm={5} md={4} >
+                        <ListGroup variant="flush">
+                            {
+                                chatList.map((chat) => (
+                                    <ListGroup.Item key={chat.id}>
+                                        {/*{chat.id}:*/} {chat.name}
+                                    </ListGroup.Item>
+                                ))
+                            }
+                        </ListGroup>
+                    </Col>
+                    <Col className="ps-5" xs={12} sm={7} md={8}>
+                        <Form onSubmit={(ev) => addMessage(ev)}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Message</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Enter message"
+                                    ref={inputRef}
+                                    value={inputText}
+                                    onChange={(ev) => setInputText(ev.target.value)}
+                                />
+                            </Form.Group>
+
+                            <Button variant="primary" type="submit">
+                                Submit
+                            </Button>
+                        </Form>
+                        <div>
+                            {messages}
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
         </div>
     );
 }
