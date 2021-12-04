@@ -2,7 +2,7 @@ import { NavLink, Outlet } from 'react-router-dom';
 //
 import { Nav } from 'react-bootstrap';
 //
-import styles from './Layout.module.css';
+//import styles from './Layout.module.css';
 
 const setActive = ({isActive}) => isActive ? 'active-link' : '';
 
@@ -10,7 +10,7 @@ const Layout = () => {
     //
     return (
         <>
-            <header className={styles.Header}>
+            <header>
                 <Nav className="justify-content-center">
                     <Nav.Item>
                         <NavLink
@@ -22,7 +22,7 @@ const Layout = () => {
                     </Nav.Item>
                     <Nav.Item>
                         <NavLink
-                            to='/Profile'
+                            to='/profile'
                             className={setActive}
                         >
                             Profile

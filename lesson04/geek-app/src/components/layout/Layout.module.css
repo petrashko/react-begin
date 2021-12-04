@@ -13,7 +13,7 @@
     text-decoration: underline;
 }
 
-.active-link {
+.Header a.active-link {
     color: #0f7dc6;
     cursor: default;
 }

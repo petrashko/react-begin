@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useMemo, useRef } from 'react';
 //
+import { useParams } from 'react-router-dom';
+//
 import { Form, Button } from 'react-bootstrap';
 //
 import styles from './Chat.module.css';
@@ -10,8 +12,7 @@ const initialMessages = [];
 
 const Chat = (props) => {
     //
-    const {chatName} = props;
-
+    const {chatId} = useParams();
     //
     const [messageList, setMessageList] = useState(initialMessages);
 
@@ -33,6 +34,16 @@ const Chat = (props) => {
         },
         // eslint-disable-next-line
         [messageList]
+    );
+
+    useEffect(
+        () => {
+            setMessageList(messageList => {
+                return [];
+            });
+        },
+        // eslint-disable-next-line
+        [chatId]
     );
 
     useEffect(
@@ -87,13 +98,25 @@ const Chat = (props) => {
         setInputText(inputText => '');
     }
 
+    
+    const chat = props.chatList.find(item => item.id === chatId);
+    if (!chat) {
+        return (
+            <h3
+                style={{textAlign: 'center', color: 'lightpink', marginBottom: '1.25rem'}}
+            >
+                Chat Not Found
+            </h3>
+        );
+    }
+
     //
     return (
         <>
             <h3
-                style={{textAlign: 'center', marginBottom: '1.25rem'}}
+                style={{textAlign: 'center', color: 'lightpink', marginBottom: '1.25rem'}}
             >
-                {chatName}
+                {chat.name}
             </h3>
             <Form onSubmit={(ev) => addMessage(ev)}>
                 <Form.Group className="mb-3">
