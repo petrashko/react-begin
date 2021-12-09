@@ -36,6 +36,14 @@ const Layout = () => {
                             Chats
                         </NavLink>
                     </Nav.Item>
+                    <Nav.Item>
+                        <NavLink
+                            to='/testing/redux'
+                            className={setActive}
+                        >
+                            Test Redux (counter)
+                        </NavLink>
+                    </Nav.Item>
                 </Nav>
             </header>
 

@@ -2,19 +2,24 @@
 
 import { useState, useEffect, useMemo, useRef } from 'react';
 //
+import {useSelector, useDispatch} from "react-redux";
+//
 import { useParams } from 'react-router-dom';
 //
 import { Form, Button } from 'react-bootstrap';
 //
+import { addMessage, clearChat } from "../../store/chats/actions.js";
+//
 import styles from './Chat.module.css';
 
-const initialMessages = [];
-
-const Chat = (props) => {
+const Chat = () => {
+    //
+    const chatList = useSelector(state => state.chats.chatList);
+    const messageList = useSelector(state => state.chats.messageList);
+    //
+    const dispatch = useDispatch();
     //
     const {chatId} = useParams();
-    //
-    const [messageList, setMessageList] = useState(initialMessages);
 
     const [inputText, setInputText] = useState('');
     const inputRef = useRef();
@@ -38,9 +43,7 @@ const Chat = (props) => {
 
     useEffect(
         () => {
-            setMessageList(messageList => {
-                return [];
-            });
+            dispatch( clearChat() );
         },
         // eslint-disable-next-line
         [chatId]
@@ -57,15 +60,11 @@ const Chat = (props) => {
 
             if (messageList[messageList.length-1].author === 'user') {
                 timerId = setTimeout(() => {
-                    setMessageList(messageList => {
-                        return [
-                            ...messageList,
-                            {
-                                text: 'Hello User! I am bot',
-                                author: 'bot'
-                            }
-                        ];
-                    });
+                    const newMessage = {
+                        text: 'Hello User! I am bot',
+                        author: 'bot'
+                    };
+                    dispatch( addMessage(newMessage) );
                 }, 1500);
             }
 
@@ -77,7 +76,7 @@ const Chat = (props) => {
         [messageList]
     );
 
-    const addMessage = (ev) => {
+    const addMessageToChat = (ev) => {
         ev.preventDefault();
 
         const text = inputText.trim();
@@ -85,21 +84,16 @@ const Chat = (props) => {
             return;
         }
 
-        setMessageList(messageList => {
-            return [
-                ...messageList,
-                {
-                    text,
-                    author: 'user'
-                }
-            ];
-        });
+        const newMessage = {
+            text,
+            author: 'user'
+        }
+        dispatch( addMessage(newMessage) );
 
         setInputText(inputText => '');
     }
 
-    
-    const chat = props.chatList.find(item => item.id === chatId);
+    const chat = chatList.find(item => item.id === chatId);
     if (!chat) {
         return (
             <h3
@@ -118,7 +112,7 @@ const Chat = (props) => {
             >
                 {chat.name}
             </h3>
-            <Form onSubmit={(ev) => addMessage(ev)}>
+            <Form onSubmit={(ev) => addMessageToChat(ev)}>
                 <Form.Group className="mb-3">
                     <Form.Label>Message</Form.Label>
                     <Form.Control

@@ -2,6 +2,8 @@
 
 import { useMemo } from 'react';
 //
+import {useSelector} from "react-redux";
+//
 import { NavLink, Outlet } from 'react-router-dom';
 //
 import { Container, Row, Col, ListGroup } from 'react-bootstrap';
@@ -10,7 +12,10 @@ import { Container, Row, Col, ListGroup } from 'react-bootstrap';
 
 const setActive = ({isActive}) => isActive ? 'chat-active-link' : '';
 
-const ChatListPage = ({chatList}) => {
+const ChatListPage = () => {
+    //
+    const chatList = useSelector(state => state.chats.chatList);
+
     //
     const chats = useMemo(
         () => {
