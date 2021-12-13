@@ -2,13 +2,15 @@
 
 import { useMemo } from 'react';
 //
-import {useSelector, useDispatch} from "react-redux";
+import {useSelector, useDispatch} from 'react-redux';
 //
-import { showName } from "../../store/profile/actions.js";
+import { getName, getIsShowName } from '../../store/profile/selectors.js';
+import { showName } from '../../store/profile/actions.js';
 
 const ProfilePage = () => {
     //
-    const {name, isShowName} = useSelector(state => state.profile);
+    const name = useSelector(getName);
+    const isShowName = useSelector(getIsShowName);
     //
     const dispatch = useDispatch();
 

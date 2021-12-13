@@ -2,56 +2,66 @@
 
 import { useState, useEffect, useMemo, useRef } from 'react';
 //
-import {useSelector, useDispatch} from "react-redux";
+import {useSelector, useDispatch} from 'react-redux';
 //
 import { useParams } from 'react-router-dom';
 //
 import { Form, Button } from 'react-bootstrap';
 //
-import { addMessage, clearChat } from "../../store/chats/actions.js";
+import { getChatList } from '../../store/chats/selectors.js';
+import { getMessageListFromChats } from '../../store/messages/selectors.js';
+import { addMessage } from '../../store/messages/actions.js';
 //
 import styles from './Chat.module.css';
 
 const Chat = () => {
     //
-    const chatList = useSelector(state => state.chats.chatList);
-    const messageList = useSelector(state => state.chats.messageList);
+    const chatList = useSelector(getChatList);
+    const messageListFromChats = useSelector(getMessageListFromChats);
     //
     const dispatch = useDispatch();
     //
     const {chatId} = useParams();
-
+    //
     const [inputText, setInputText] = useState('');
     const inputRef = useRef();
+    //
+    const messageListRef = useRef([]);
+
+    //
+    const chat = chatList.find(item => item.id === chatId);
 
     const messages = useMemo(
         () => {
-            return messageList.map((msg, index) => {
-                return (
-                    <p
-                        key={msg.text + index}
-                        className={styles.MsgParagraf}
-                    >
-                        {msg.author}: {msg.text}
-                    </p>
-                );
-            });
-        },
-        // eslint-disable-next-line
-        [messageList]
-    );
+            if (chat) {
+                messageListRef.current = messageListFromChats[chat.id];
+            }
 
-    useEffect(
-        () => {
-            dispatch( clearChat() );
+            if (messageListRef.current.length !== 0) {
+                return messageListRef.current.map((msg, index) => {
+                    return (
+                        <p
+                            key={msg.text + index}
+                            className={styles.MsgParagraf}
+                        >
+                            {msg.author}: {msg.text}
+                        </p>
+                    );
+                });
+            }
+            else {
+                return null;
+            }
         },
         // eslint-disable-next-line
-        [chatId]
+        [chatId, messageListFromChats]
     );
 
     useEffect(
         () => {
             inputRef.current?.focus();
+
+            const messageList = messageListRef.current;
             if (messageList.length === 0) {
                 return;
             }
@@ -61,6 +71,7 @@ const Chat = () => {
             if (messageList[messageList.length-1].author === 'user') {
                 timerId = setTimeout(() => {
                     const newMessage = {
+                        chatId,
                         text: 'Hello User! I am bot',
                         author: 'bot'
                     };
@@ -73,7 +84,7 @@ const Chat = () => {
             }
         },
         // eslint-disable-next-line
-        [messageList]
+        [messages]
     );
 
     const addMessageToChat = (ev) => {
@@ -85,6 +96,7 @@ const Chat = () => {
         }
 
         const newMessage = {
+            chatId,
             text,
             author: 'user'
         }
@@ -93,7 +105,6 @@ const Chat = () => {
         setInputText(inputText => '');
     }
 
-    const chat = chatList.find(item => item.id === chatId);
     if (!chat) {
         return (
             <h3

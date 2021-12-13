@@ -2,6 +2,8 @@
 
 // eslint-disable-next-line
 import {v4 as uuidv4} from 'uuid';
+//
+import { ADD_CHAT, DELETE_CHAT } from './actions.js';
 
 const initialState = {
     chatList: [
@@ -16,20 +18,20 @@ const initialState = {
         {id: 'chat-3', name: 'Chat 3'},
         {id: 'chat-4', name: 'Chat 4'}
     ],
-    messageList: [],
 }
 
 const chatsReducer = (state=initialState, action) => {
     switch(action.type) {
-        case 'ADD_MESSAGE':
+        case ADD_CHAT:
             return {
                 ...state,
-                messageList: [...state.messageList, action.payload]
+                chatList: [...state.chatList, action.payload]
             }
-        case 'CLEAR_CHAT':
+        case DELETE_CHAT:
+            const newList = state.chatList.filter(item => item.id !== action.payload);
             return {
                 ...state,
-                messageList: []
+                chatList: newList
             }
         default:
             return state;

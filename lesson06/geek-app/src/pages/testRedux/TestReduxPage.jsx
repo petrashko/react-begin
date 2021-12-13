@@ -1,14 +1,15 @@
 // /* eslint-disable */
 
-import {useSelector, useDispatch} from "react-redux";
+import { useSelector, useDispatch } from 'react-redux';
 //
-import {inc, dec, rnd} from "../../store/testCounter/actions.js";
+import { getCount } from '../../store/testCounter/selectors.js';
+import { inc, dec, rnd } from '../../store/testCounter/actions.js';
 
 
 // eslint-disable-next-line
 const TestReduxPage = () => {
     //
-    const count = useSelector(state => state.testCounter.count);
+    const count = useSelector(getCount);
     //
     const dispatch = useDispatch();
 

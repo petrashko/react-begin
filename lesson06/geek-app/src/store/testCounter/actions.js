@@ -1,21 +1,25 @@
 // /* eslint-disable */
 
+export const INC = 'TEST_COUNTER::INC';
+export const DEC = 'TEST_COUNTER::DEC';
+export const RND = 'TEST_COUNTER::RND';
+
 export const inc = () => {
     return {
-        type: 'INC'
+        type: INC
     }
 }
 
 export const dec = () => {
     return {
-        type: 'DEC'
+        type: DEC
     }
 }
 
 /*
 export const rnd = (value) => {
     return {
-        type: 'RND',
+        type: RND,
         payload: value
     }
 }
@@ -27,7 +31,7 @@ export const rnd = (value) => (dispatch) => {
     // Вместо setTimeout можно выполнять запросы на сервер
     setTimeout(() => {
         dispatch({
-            type: 'RND',
+            type: RND,
             payload: value
         });
     }, 100)
