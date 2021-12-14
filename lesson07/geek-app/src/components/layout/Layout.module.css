@@ -1,0 +1,19 @@
+
+.Header {
+    background-color: #2C2C32;
+    padding: 2rem 0;
+    text-align: center;
+}
+.Header a {
+    color: white;
+    text-decoration: none;
+    padding: 0 1rem;
+}
+.Header a:hover {
+    text-decoration: underline;
+}
+
+.Header a.active-link {
+    color: #0f7dc6;
+    cursor: default;
+}
