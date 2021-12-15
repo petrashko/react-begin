@@ -5,7 +5,10 @@ import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
 // eslint-disable-next-line
 import ReduxThunk from 'redux-thunk';
 //
-import {configureStore} from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
+//
+import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 //
 import { profileReducer } from './profile/reducer.js';
 import { chatsReducer } from './chats/reducer.js';
@@ -52,11 +55,49 @@ const store = createStore(
 );
 */
 
+/*
 const store = configureStore({
     reducer: {
         profile: profileReducer,
         chats: chatsReducer,
         messages: messagesReducer,
+        testCounter: testCounterReducer
+    },
+    / *
+    middleware: [
+        ReduxThunk,
+        stringMiddleware
+    ],
+    * /
+    // Или (getDefaultMiddleware() - включает в себя ReduxThunk)
+    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(stringMiddleware),
+    devTools: process.env.NODE_ENV !== 'production'
+});
+*/
+
+// ДЗ - 7
+
+const roomsPersistConfig = {
+    key: 'rootRooms',
+    version: 1,
+    storage
+}
+
+const chatsPersistedReducer = persistReducer(roomsPersistConfig, chatsReducer);
+
+const msgPersistConfig = {
+    key: 'rootMsg',
+    version: 1,
+    storage
+}
+
+const messagesPersistedReducer = persistReducer(msgPersistConfig, messagesReducer);
+
+const store = configureStore({
+    reducer: {
+        profile: profileReducer,
+        chats: chatsPersistedReducer,
+        messages: messagesPersistedReducer,
         testCounter: testCounterReducer
     },
     /*
@@ -66,7 +107,13 @@ const store = configureStore({
     ],
     */
     // Или (getDefaultMiddleware() - включает в себя ReduxThunk)
-    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(stringMiddleware),
+    middleware: (getDefaultMiddleware) => {
+        return getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+            }
+        }).concat(stringMiddleware);
+    },
     devTools: process.env.NODE_ENV !== 'production'
 });
 

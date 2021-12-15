@@ -14,7 +14,7 @@ import {v4 as uuidv4} from 'uuid';
 //
 import { getChatList } from '../../store/chats/selectors.js';
 import { addChat, deleteChat } from '../../store/chats/actions.js';
-import { addChat as addNewChat } from '../../store/messages/actions.js';
+import { /*addChat as addNewChat,*/ deleteChat as deleteMessages } from '../../store/messages/actions.js';
 
 const setActive = ({isActive}) => isActive ? 'chat-active-link' : '';
 
@@ -26,36 +26,6 @@ const ChatListPage = () => {
     //
     const dispatch = useDispatch();
     
-    //
-    const chats = useMemo(
-        () => {
-            return chatList.map((chat) => {
-                return (
-                    <ListGroup.Item
-                        className="d-flex justify-content-between align-items-start"
-                        key={chat.id}
-                    >
-                        <NavLink
-                            to={`talk/${chat.id}`}
-                            className={setActive}
-                        >
-                            {chat.name}
-                        </NavLink>
-                        <Button
-                            variant="outline-danger"
-                            size="sm"
-                            onClick={(ev) => removeChat(ev, chat.id)}
-                        >
-                            Delete
-                        </Button>
-                    </ListGroup.Item>
-                );
-            });
-        },
-        // eslint-disable-next-line
-        [chatList]
-    );
-
     const handleModalClose = () => {
         setShowModal(showModal => {
             return false;
@@ -82,14 +52,32 @@ const ChatListPage = () => {
         }
         
         dispatch( addChat(newChat) );
-        dispatch( addNewChat(newChat.id) );
-
+        //dispatch( addNewChat(newChat.id) );
+        
         handleModalClose();
     }
 
     const removeChat = (ev, chatId) => {
         dispatch( deleteChat(chatId) );
+        dispatch( deleteMessages(chatId) );
     }
+
+    //
+    const chats = useMemo(
+        () => {
+            return chatList.map((chat) => {
+                return (
+                    <ChatItem
+                        chat={chat}
+                        onRemoveChat={removeChat}
+                        key={chat.id}
+                    />
+                );
+            });
+        },
+        // eslint-disable-next-line
+        [chatList]
+    );
 
     //
     return (
@@ -143,6 +131,29 @@ const ChatListPage = () => {
                 </Form>
             </Modal>
         </>
+    );
+}
+
+const ChatItem = ({chat, onRemoveChat}) => {
+    //
+    return (
+        <ListGroup.Item
+            className="d-flex justify-content-between align-items-start"
+        >
+            <NavLink
+                to={`talk/${chat.id}`}
+                className={setActive}
+            >
+                {chat.name}
+            </NavLink>
+            <Button
+                variant="outline-danger"
+                size="sm"
+                onClick={(ev) => onRemoveChat(ev, chat.id)}
+            >
+                Delete
+            </Button>
+        </ListGroup.Item>
     );
 }
 

@@ -10,7 +10,7 @@ import { Form, Button } from 'react-bootstrap';
 //
 import { getChatList } from '../../store/chats/selectors.js';
 import { getMessageListFromChats } from '../../store/messages/selectors.js';
-import { addMessage } from '../../store/messages/actions.js';
+import { addMessageWithBot } from '../../store/messages/actions.js';
 //
 import styles from './Chat.module.css';
 
@@ -33,21 +33,17 @@ const Chat = () => {
 
     const messages = useMemo(
         () => {
-            if (chat) {
+            if (chat && messageListFromChats[chat.id]) {
                 messageListRef.current = messageListFromChats[chat.id];
+            }
+            else {
+                messageListRef.current = [];
             }
 
             if (messageListRef.current.length !== 0) {
-                return messageListRef.current.map((msg, index) => {
-                    return (
-                        <p
-                            key={msg.text + index}
-                            className={styles.MsgParagraf}
-                        >
-                            {msg.author}: {msg.text}
-                        </p>
-                    );
-                });
+                return messageListRef.current.map((msg, index) => (
+                    <MessageItem msg={msg} key={msg.text + index} />
+                ));
             }
             else {
                 return null;
@@ -60,28 +56,6 @@ const Chat = () => {
     useEffect(
         () => {
             inputRef.current?.focus();
-
-            const messageList = messageListRef.current;
-            if (messageList.length === 0) {
-                return;
-            }
-
-            let timerId = null;
-
-            if (messageList[messageList.length-1].author === 'user') {
-                timerId = setTimeout(() => {
-                    const newMessage = {
-                        chatId,
-                        text: 'Hello User! I am bot',
-                        author: 'bot'
-                    };
-                    dispatch( addMessage(newMessage) );
-                }, 1500);
-            }
-
-            return () => {
-                clearTimeout(timerId);
-            }
         },
         // eslint-disable-next-line
         [messages]
@@ -100,29 +74,20 @@ const Chat = () => {
             text,
             author: 'user'
         }
-        dispatch( addMessage(newMessage) );
+        dispatch( addMessageWithBot(newMessage) );
 
         setInputText(inputText => '');
     }
 
     if (!chat) {
-        return (
-            <h3
-                style={{textAlign: 'center', color: 'lightpink', marginBottom: '1.25rem'}}
-            >
-                Chat Not Found
-            </h3>
-        );
+        return <Header text="Chat Not Found" />;
     }
 
     //
     return (
         <>
-            <h3
-                style={{textAlign: 'center', color: 'lightpink', marginBottom: '1.25rem'}}
-            >
-                {chat.name}
-            </h3>
+            <Header text={chat.name} />
+
             <Form onSubmit={(ev) => addMessageToChat(ev)}>
                 <Form.Group className="mb-3">
                     <Form.Label>Message</Form.Label>
@@ -143,6 +108,26 @@ const Chat = () => {
                 {messages}
             </div>
         </>
+    );
+}
+
+const MessageItem = ({msg}) => {
+    //
+    return (
+        <p className={styles.MsgParagraf}>
+            {msg.author}: {msg.text}
+        </p>
+    );
+}
+
+const Header = ({text}) => {
+    //
+    return (
+        <h3
+            style={{textAlign: 'center', color: 'lightpink', marginBottom: '1.25rem'}}
+        >
+            {text}
+        </h3>
     );
 }
 

@@ -1,36 +1,52 @@
 // /* eslint-disable */
 
-import { ADD_MESSAGE, ADD_CHAT } from './actions.js';
+import { ADD_MESSAGE, /*ADD_CHAT,*/ DELETE_CHAT } from './actions.js';
 
 const initialState = {
-    messageListFromChats: {
-        'chat-1': [],
-        'chat-2': [],
-        'chat-3': [],
-        'chat-4': [],
-    }
+    messageListFromChats: {},
 }
 
 const messagesReducer = (state=initialState, action) => {
     switch(action.type) {
-        case ADD_MESSAGE:
+        case ADD_MESSAGE: {
             const {chatId, ...messageObj} = action.payload;
-            const messageList = [...state.messageListFromChats[chatId], messageObj];
+            
+            const newMessageList = {...state.messageListFromChats};
+
+            newMessageList[chatId] = [
+                ...(newMessageList[chatId] || []),
+                messageObj
+            ];
+            
             return {
                 ...state,
-                messageListFromChats: {
-                    ...state.messageListFromChats,
-                    [chatId]: messageList
-                }
+                messageListFromChats: newMessageList
             }
-        case ADD_CHAT:
+        }
+        /*
+        case ADD_CHAT: {
+            const newMessageList = {...state.messageListFromChats};
+            newMessageList[action.payload] = [];
+            
             return {
                 ...state,
-                messageListFromChats: {
-                    ...state.messageListFromChats,
-                    [action.payload]: []
-                }
+                messageListFromChats: newMessageList
             }
+        }
+        */
+        case DELETE_CHAT: {
+            if (!state.messageListFromChats.hasOwnProperty(action.payload)) {
+                return state;
+            }
+
+            const newMessageList = {...state.messageListFromChats};
+            delete newMessageList[action.payload];
+
+            return {
+                ...state,
+                messageListFromChats: newMessageList
+            }
+        }
         default:
             return state;
     }
