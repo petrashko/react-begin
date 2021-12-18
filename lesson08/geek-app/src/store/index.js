@@ -7,12 +7,13 @@ import ReduxThunk from 'redux-thunk';
 //
 import { configureStore } from '@reduxjs/toolkit';
 //
-import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+//import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
+//import storage from 'redux-persist/lib/storage';
 //
 import { profileReducer } from './profile/reducer.js';
 import { chatsReducer } from './chats/reducer.js';
 import { messagesReducer } from './messages/reducer.js';
+import { postsReducer } from './posts/reducer.js';
 import { testCounterReducer } from './testCounter/reducer.js';
 
 /*
@@ -21,6 +22,7 @@ const store = createStore(
         profile: profileReducer,
         chats: chatsReducer,
         messages: messagesReducer,
+        posts: postsReducer,
         testCounter: testCounterReducer
     }),
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
@@ -43,6 +45,7 @@ const store = createStore(
         profile: profileReducer,
         chats: chatsReducer,
         messages: messagesReducer,
+        posts: postsReducer,
         testCounter: testCounterReducer
     }),
     compose(
@@ -55,28 +58,27 @@ const store = createStore(
 );
 */
 
-/*
 const store = configureStore({
     reducer: {
         profile: profileReducer,
         chats: chatsReducer,
         messages: messagesReducer,
+        posts: postsReducer,
         testCounter: testCounterReducer
     },
-    / *
+    /*
     middleware: [
         ReduxThunk,
         stringMiddleware
     ],
-    * /
+    */
     // Или (getDefaultMiddleware() - включает в себя ReduxThunk)
     middleware: getDefaultMiddleware => getDefaultMiddleware().concat(stringMiddleware),
     devTools: process.env.NODE_ENV !== 'production'
 });
-*/
 
 // ДЗ - 7
-
+/*
 const roomsPersistConfig = {
     key: 'rootRooms',
     version: 1,
@@ -98,14 +100,15 @@ const store = configureStore({
         profile: profileReducer,
         chats: chatsPersistedReducer,
         messages: messagesPersistedReducer,
+        posts: postsReducer,
         testCounter: testCounterReducer
     },
-    /*
+    / *
     middleware: [
         ReduxThunk,
         stringMiddleware
     ],
-    */
+    * /
     // Или (getDefaultMiddleware() - включает в себя ReduxThunk)
     middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware({
@@ -116,5 +119,5 @@ const store = configureStore({
     },
     devTools: process.env.NODE_ENV !== 'production'
 });
-
+*/
 export {store};

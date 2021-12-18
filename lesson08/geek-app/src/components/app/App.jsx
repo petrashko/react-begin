@@ -8,6 +8,7 @@ import { HomePage } from '../../pages/home/HomePage.jsx';
 import { TestReduxPage } from '../../pages/testRedux/TestReduxPage.jsx';
 import { ProfilePage } from '../../pages/profile/ProfilePage.jsx';
 import { ChatListPage } from '../../pages/chatList/ChatListPage.jsx';
+import { PostListPage } from '../../pages/postList/PostListPage.jsx';
 import { NotFoundPage } from '../../pages/notFoundPage/NotFoundPage.jsx';
 //
 import { Chat } from '../chat/Chat.jsx';
@@ -34,10 +35,6 @@ const App = () => {
                         element={<HomePage />}
                     />
                     <Route
-                        path="testing/redux"
-                        element={<TestReduxPage />}
-                    />
-                    <Route
                         path="profile"
                         element={<ProfilePage />}
                     />
@@ -47,6 +44,14 @@ const App = () => {
                     >
                         <Route path="talk/:chatId"  element={<Chat />} />
                     </Route>
+                    <Route
+                        path="posts"
+                        element={<PostListPage />}
+                    />
+                    <Route
+                        path="testing/redux"
+                        element={<TestReduxPage />}
+                    />
                     <Route
                         path="*"
                         element={<NotFoundPage />}

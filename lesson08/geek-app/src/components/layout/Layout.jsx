@@ -38,6 +38,14 @@ const Layout = () => {
                     </Nav.Item>
                     <Nav.Item>
                         <NavLink
+                            to='/posts'
+                            className={setActive}
+                        >
+                            Posts
+                        </NavLink>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <NavLink
                             to='/testing/redux'
                             className={setActive}
                         >
