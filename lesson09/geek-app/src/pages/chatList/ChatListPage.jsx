@@ -4,13 +4,16 @@ import { useState, useMemo } from 'react';
 //
 import { useSelector, useDispatch } from 'react-redux';
 //
-import { NavLink, Outlet } from 'react-router-dom';
+import { Navigate, NavLink, useLocation, Outlet } from 'react-router-dom';
 //
 import { Container, Row, Col, ListGroup, Form, Button, Modal } from 'react-bootstrap';
 //
 import {v4 as uuidv4} from 'uuid';
 //
 //import { Chat } from '../../components/chat/Chat.jsx';
+//
+import { useAuth } from '../../hooks/authHook.js';
+import { removeAuthUser } from '../../store/user/actions.js';
 //
 import { getChatList } from '../../store/chats/selectors.js';
 import { addChat, deleteChat } from '../../store/chats/actions.js';
@@ -20,9 +23,13 @@ const setActive = ({isActive}) => isActive ? 'chat-active-link' : '';
 
 const ChatListPage = () => {
     //
+    const location = useLocation();
+    //
     const [showModal, setShowModal] = useState(false);
     //
     const chatList = useSelector(getChatList);
+    //
+    const {isAuth, email} = useAuth();
     //
     const dispatch = useDispatch();
     
@@ -79,9 +86,20 @@ const ChatListPage = () => {
         [chatList]
     );
 
+    if (!isAuth) {
+        return <Navigate to="/login" replace state={{from: location}} />;
+    }
+
     //
     return (
         <>
+            <div className="text-center" style={{marginTop: '1rem'}}>
+                <button
+                    onClick={()=> dispatch( removeAuthUser() )}
+                >
+                    Log out from {email}
+                </button>
+            </div>
             <Container className="mt-5 mb-5">
                 <Row>
                     <Col className="pe-5" xs={12} sm={5} md={4} >

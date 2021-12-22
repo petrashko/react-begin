@@ -14,6 +14,7 @@ import { profileReducer } from './profile/reducer.js';
 import { chatsReducer } from './chats/reducer.js';
 import { messagesReducer } from './messages/reducer.js';
 import { postsReducer } from './posts/reducer.js';
+import { userReducer } from './user/reducer.js';
 import { testCounterReducer } from './testCounter/reducer.js';
 
 /*
@@ -23,6 +24,7 @@ const store = createStore(
         chats: chatsReducer,
         messages: messagesReducer,
         posts: postsReducer,
+        user: userReducer,
         testCounter: testCounterReducer
     }),
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
@@ -46,6 +48,7 @@ const store = createStore(
         chats: chatsReducer,
         messages: messagesReducer,
         posts: postsReducer,
+        user: userReducer,
         testCounter: testCounterReducer
     }),
     compose(
@@ -64,6 +67,7 @@ const store = configureStore({
         chats: chatsReducer,
         messages: messagesReducer,
         posts: postsReducer,
+        user: userReducer,
         testCounter: testCounterReducer
     },
     /*

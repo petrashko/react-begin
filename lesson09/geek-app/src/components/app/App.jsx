@@ -5,6 +5,8 @@ import { Routes, Route } from 'react-router-dom';
 import { Layout } from '../layout/Layout.jsx';
 //
 import { HomePage } from '../../pages/home/HomePage.jsx';
+import { LoginPage } from '../../pages/login/LoginPage.jsx';
+import { RegisterPage } from '../../pages/register/RegisterPage.jsx';
 import { TestReduxPage } from '../../pages/testRedux/TestReduxPage.jsx';
 import { ProfilePage } from '../../pages/profile/ProfilePage.jsx';
 import { ChatListPage } from '../../pages/chatList/ChatListPage.jsx';
@@ -33,6 +35,14 @@ const App = () => {
                     <Route
                         index
                         element={<HomePage />}
+                    />
+                    <Route
+                        path="/login"
+                        element={<LoginPage />}
+                    />
+                    <Route
+                        path="/register"
+                        element={<RegisterPage />}
                     />
                     <Route
                         path="profile"
